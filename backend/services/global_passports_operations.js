@@ -3,7 +3,7 @@ const json = require('../assets/global_passports.json')
 
 const search_globalPassports = data => {
     if(!data) return false
-    console.log(data.p)
+
     return json.filter(json => json.p === data.p)
 }
 
