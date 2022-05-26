@@ -1,38 +1,22 @@
 {
-  "name": "marsport2-frontend",
+  "name": "marsport2",
   "version": "0.1.0",
-  "private": true,
+  "description": "",
   "dependencies": {
     "concurrently": "^7.2.1"
   },
   "scripts": {
-    "start": "concurrently \"cd frontend && react-scripts start\" \"cd backend && nodemon server.js\"",
-    "install": "concurrently \"cd frontend && npm install\" \"cd backend && npm install\"",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "concurrently \"cd frontend && npm install & npm start\" \"cd backend && npm install & nodemon server.js\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lontus-racref/marsport2.git"
   },
-  "browser": {
-    "fs": false,
-    "path": false,
-    "os": false
+  "author": "~lontus-racref",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lontus-racref/marsport2/issues"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "homepage": "https://github.com/lontus-racref/marsport2#readme"
 }

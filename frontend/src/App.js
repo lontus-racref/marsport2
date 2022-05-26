@@ -1,5 +1,5 @@
 //--import packages
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { urbitVisor } from "@dcspark/uv-core"
 
 //--import components
@@ -57,9 +57,9 @@ const App = () => {
           if(data) { 
             setPassportId(data)
           } else { 
-            getPassport('http://localhost:5000/getpassport', { 'p': p, 'g': '5537' })
+            getPassport(`${ process.env.REACT_APP_DB_URL }:${ process.env.REACT_APP_DB_PORT }/getpassport`, { 'p': p, 'g': '5537' })
               .then(data => {
-                setPassportId(data.result.id)
+                if(data) setPassportId(data.result.id)
               })
           }
         })
