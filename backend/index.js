@@ -16,14 +16,14 @@ app.get('/:p', (req, res) => {
  
 app.post('/getpassport', (req, res) => {
     const { g, p } = req.body
-    console.log(req.body)
+    
     let result = get_id(p, g)
 
     res.setHeader('Content-Type', 'application/json');
     res.status(200).send(JSON.stringify({result}));
 })
 
-const PORT = process.env.DB_PORT
+const PORT = process.env.DB_PORT || 5050
  
 app.listen(PORT, () => {
   console.log(`Our express server is up on port ${ PORT }`)

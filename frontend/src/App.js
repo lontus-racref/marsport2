@@ -5,7 +5,7 @@ import { urbitVisor } from "@dcspark/uv-core"
 //--import components
 import Visor from './components/visor'
 import MarsportTemplate from './components/marsportTemplate'
-import GetMarsport from './components/getMarsport'
+//import GetMarsport from './components/getMarsport'
 
 //--import services 
 import checkVisor from './services/checkVisor'
@@ -53,11 +53,20 @@ const App = () => {
       searchAzimuth(p).then(data => {
         if(p.match(/-/)) setStar(data.sponsor['urbit-id'])
         if(p.length > 4) setGalaxy(data.sponsor.sponsor['urbit-id'])
+        if(p){
+          if(data.sponsor['urbit-id'] && data.sponsor.sponsor['urbit-id']) {
+            setCitizenType('Planet')
+          } else if(!data.sponsor['urbit-id'] &&  data.sponsor.sponsor['urbit-id']) {
+            setCitizenType('Star')
+          } else {
+            setCitizenType('Galaxy')
+          }
+        }
         checkPassport(p).then(data => {
           if(data) { 
             setPassportId(data)
           } else { 
-            getPassport(`${ process.env.REACT_APP_DB_URL }:${ process.env.REACT_APP_DB_PORT }/getpassport`, { 'p': p, 'g': '5537' })
+            getPassport(`${ process.env.REACT_APP_DB_URL }/getpassport`, { 'p': p, 'g': '5537' })
               .then(data => {
                 if(data) setPassportId(data.result.id)
               })

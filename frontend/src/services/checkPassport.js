@@ -1,7 +1,7 @@
 const checkPassport = async props => {
     let result = ''
 
-    await fetch(`http://localhost:5000/${ props }`)
+    await fetch(`${ process.env.REACT_APP_DB_URL }/${ props }`)
         .then(data => {
             return data.json()
         }).then(data => {
