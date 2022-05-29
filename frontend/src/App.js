@@ -12,19 +12,21 @@ import checkVisor from './services/checkVisor'
 import searchAzimuth from './services/searchAzimuth'
 import checkPassport from './services/checkPassport'
 import getPassport from './services/getPassport'
+import updateCounter from './services/updateCounter'
+import postUser from './services/postUser'
 
 //--import styles
 import './App.css'
 
 const App = () => {
   const [p, setP] = useState('')
-  const [auth, setAuth] = useState('')
+  const [setAuth] = useState('')
   const [passportId, setPassportId] = useState('')
   const [visor, setVisor] = useState(false)
   const [star, setStar] = useState('')
   const [galaxy, setGalaxy] = useState('')
   const [citizenType, setCitizenType] = useState('')
-  const [qr, setQr] = useState('')
+  const [qr] = useState('')
   
   useEffect(() => {
     checkVisor().then(data => {
@@ -45,11 +47,12 @@ const App = () => {
     }
   },[p])
 
-  const setData = () => {
+  const setData = () => {    
     urbitVisor.getShip().then(res => {
       setP(`~${ res.response }`)
-      setAuth(res.id)
-    }).then(
+    }).then(() => {
+      if(!p) return false
+
       searchAzimuth(p).then(data => {
         if(p.match(/-/)) setStar(data.sponsor['urbit-id'])
         if(p.length > 4) setGalaxy(data.sponsor.sponsor['urbit-id'])
@@ -62,18 +65,23 @@ const App = () => {
             setCitizenType('Galaxy')
           }
         }
+        
         checkPassport(p).then(data => {
           if(data) { 
             setPassportId(data)
           } else { 
-            getPassport(`${ process.env.REACT_APP_DB_URL }/getpassport`, { 'p': p, 'g': '5537' })
+            getPassport(`${ process.env.REACT_APP_DB_URL }/get/counter/${ process.env.REACT_APP_PP_KEY }`, p)
               .then(data => {
-                if(data) setPassportId(data.result.id)
+                if(data) {
+                  setPassportId(data.id)
+                  postUser({ "p": p, "id": data.id })
+                  updateCounter(data.id)
+                }
               })
           }
         })
       })
-    )
+    })
   }
 
   //--check if visor installed

@@ -1,14 +1,18 @@
 const checkPassport = async props => {
-    let result = ''
-
-    await fetch(`${ process.env.REACT_APP_DB_URL }/${ props }`)
-        .then(data => {
-            return data.json()
-        }).then(data => {
-            if(data.length > 0) result = data[0].id
+    try {
+        const result = await fetch(`${ process.env.REACT_APP_DB_URL }/${ props }`, {
+            method: "GET",
+            mode: "cors"
         })
+            .then(data => data.json())
+            .then(data => {
+               return data.id
+            })
 
-    return result
+        return result
+    } catch(e) {
+        console.log(e)
+    }
 }
 
 export default checkPassport

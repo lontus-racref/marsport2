@@ -1,0 +1,84 @@
+const express = require('express')
+const UserModel = require('../models/user.model')
+const CounterModel = require('../models/counter.model')
+const router = express.Router()
+const get_id = require('../services/u_cc_gen')
+const { pad_num } = require('../services/global_counter_operations')
+const cors = require('cors')
+
+//-- usermodel post new user
+router.post('/getpassport', cors(), async (req, res) => {
+    const data = new UserModel({
+        "p": req.body.p,
+        "id": req.body.id
+    })
+
+    try{
+        const user = await data.save();
+        res.status(200).json(user)
+    }
+    catch(err){
+        res.status(400).json({message: err.message})
+    }
+})
+
+//--usermodel get by p
+router.get('/:p', async (req, res) => {
+    try{
+        const data = await UserModel.findOne({ p: req.params.p })
+        
+        res.json(data)
+    }
+    catch(err){
+        res.status(500).json({message: err.message})
+    }
+})
+
+//--countermodel get current count
+router.get('/get/counter/:key', async (req, res) => {
+    try{
+        const data = await CounterModel.find({},{_id:0})
+        
+        data.forEach(el => {
+            if(el.series == '' || el.global_counter === 9999 && el.cohort === 999) {
+                const alph = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+                const index = alph.indexOf(el.series)
+                el.series = alph[index + 1]
+                el.cohort = 1
+                el.global_counter = 0
+            }
+            if(el.cohort == '' || el.global_counter === 9999) {
+                el.cohort++
+                el.global_counter = 0
+            }
+    
+            el.global_counter++
+
+            let result = { "id": `${el.series}-${req.params.key || 5537}-${pad_num(el.cohort,3)}-${pad_num(el.global_counter,4)}` }
+            res.json(result)
+        })        
+    }
+    catch(err){
+        res.status(500).json({message: err.message})
+    }
+})
+
+
+//Update by ID Method
+router.patch('/update/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const updatedData = req.body;
+        const options = { new: true };
+        const result = await CounterModel.findByIdAndUpdate(
+            id, updatedData, options
+        )
+
+        res.send(result)
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+})
+
+module.exports = router
